@@ -3,6 +3,7 @@ package cat.tecnocampus.fgcstations.application;
 import cat.tecnocampus.fgcstations.application.DTOs.*;
 import cat.tecnocampus.fgcstations.application.exception.UserDoesNotExistsException;
 import cat.tecnocampus.fgcstations.application.mapper.MapperHelper;
+import cat.tecnocampus.fgcstations.domain.DayTimeStart;
 import cat.tecnocampus.fgcstations.domain.FavoriteJourney;
 import cat.tecnocampus.fgcstations.domain.Journey;
 import cat.tecnocampus.fgcstations.domain.User;
@@ -10,7 +11,11 @@ import cat.tecnocampus.fgcstations.persistence.DayTimeStartRepository;
 import cat.tecnocampus.fgcstations.persistence.FavoriteJourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.JourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import java.awt.print.Pageable;
 
@@ -127,10 +132,16 @@ public class FcgUserService {
     public void addUserFavoriteJourney(String username, FavoriteJourneyDTO favoriteJourneyDTO) {
         FavoriteJourney favoriteJourney = convertFavoriteJourneyDTO(username, favoriteJourneyDTO);
 
-        // TODO 19: explicitly save the journey. You can solve this exercise without leaving this file
-        // TODO 20: explicitly save the favorite journey. You can solve this exercise without leaving this file
-        // TODO 21: explicitly save all the dayTimeStarts of the favorite journey. You can solve this exercise without leaving this file
-        favoriteJourney.getDayTimeStarts(); /* do something here for each daytimeStarts*/
+        // DONE 19: explicitly save the journey. You can solve this exercise without leaving this file
+        journeyRepository.save(favoriteJourney.getJourney());
+
+        // DONE 20: explicitly save the favorite journey. You can solve this exercise without leaving this file
+        favoriteJourneyRepository.save(favoriteJourney);
+
+        // DONE 21: explicitly save all the dayTimeStarts of the favorite journey. You can solve this exercise without leaving this file
+        List<DayTimeStart> dayTimeStarts = favoriteJourney.getDayTimeStarts(); /* do something here for each daytimeStarts*/
+        dayTimeStartRepository.saveAll(dayTimeStarts);
+
     }
 
     private FavoriteJourney convertFavoriteJourneyDTO(String username, FavoriteJourneyDTO favoriteJourneyDTO) {
