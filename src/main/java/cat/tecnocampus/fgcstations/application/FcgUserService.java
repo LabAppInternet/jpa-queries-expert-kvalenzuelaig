@@ -1,6 +1,7 @@
 package cat.tecnocampus.fgcstations.application;
 
 import cat.tecnocampus.fgcstations.application.DTOs.*;
+import cat.tecnocampus.fgcstations.application.exception.UserDoesNotExistsException;
 import cat.tecnocampus.fgcstations.application.mapper.MapperHelper;
 import cat.tecnocampus.fgcstations.domain.FavoriteJourney;
 import cat.tecnocampus.fgcstations.domain.Journey;
@@ -32,10 +33,10 @@ public class FcgUserService {
     }
 
     public UserDTO getUserDTO(String username) {
-        //TODO 10.0: get the user (domain) given her username.
+        //DONE 10.0: get the user (domain) given her username.
         User user = getDomainUser(username);
 
-        // TODO 11.0: get the user's favorite journeys
+        // DONE 11.0: get the user's favorite journeys
         user.setFavoriteJourneyList(getFavoriteJourneys(username));
 
         //domain users are mapped to DTOs
@@ -43,9 +44,12 @@ public class FcgUserService {
     }
 
     public User getDomainUser(String username) {
-        // TODO 10.1: get the user (domain) given her username. If the user does not exist, throw a UserDoesNotExistsException
+        // DONE 10.1: get the user (domain) given her username. If the user does not exist, throw a UserDoesNotExistsException
         //  You can solve this exercise without leaving this file
-        return null;
+        User user = userRepository.findByUsername(username);
+
+        if (user == null ) throw new UserDoesNotExistsException("User dos not exist");
+        else return user;
     }
 
 
@@ -90,8 +94,9 @@ public class FcgUserService {
     public List<FavoriteJourney> getFavoriteJourneys(String username) {
         User user = getDomainUser(username);
 
-        // TODO 11.1: get the user's favorite journeys given the User (domain object)
-        List<FavoriteJourney> favoriteJourneys = new ArrayList<>(); //feed this list with the favorite journeys
+        // DONE 11.1: get the user's favorite journeys given the User (domain object)
+        List<FavoriteJourney> favoriteJourneys = new ArrayList<>();
+        favoriteJourneys = user.getFavoriteJourneyList();
         return favoriteJourneys;
     }
 
