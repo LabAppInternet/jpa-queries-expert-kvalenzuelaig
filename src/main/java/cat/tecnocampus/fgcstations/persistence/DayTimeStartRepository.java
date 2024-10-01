@@ -8,4 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface DayTimeStartRepository extends JpaRepository<DayTimeStart, String> {
+
+    @Query("SELECT count(dts.dayOfWeek), dts.dayOfWeek FROM DayTimeStart dts GROUP BY dts.dayOfWeek")
+    List<PopularDayOfWeek> getPopularDayOfWeek();
+
 }
