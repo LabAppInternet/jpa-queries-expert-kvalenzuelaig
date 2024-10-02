@@ -14,4 +14,7 @@ public interface JourneyRepository extends JpaRepository<Journey, JourneyId> {
 
     <S extends Journey> S save(S entity);
 
+    @Query("SELECT j FROM Journey j")
+    List<JourneyDTO> findAllJourneyDTO();
+
 }

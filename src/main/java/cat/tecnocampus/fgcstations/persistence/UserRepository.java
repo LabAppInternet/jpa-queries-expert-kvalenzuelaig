@@ -20,7 +20,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT u FROM User u")
     List<User> findAllUsers();
 
-    UserDTOInterface findViewByUsername(String username);
+    UserDTOInterface findUserDTOInterfaceByUsername(String username);
+
+    UserDTOnoFJ findUserDTOnoFJByUsername(String username);
 
     List<UserDTOInterface> findUserByNameAndSecondName(String name, String secondName);
 

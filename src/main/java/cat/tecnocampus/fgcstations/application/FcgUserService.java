@@ -12,6 +12,7 @@ import cat.tecnocampus.fgcstations.persistence.FavoriteJourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.JourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.UserRepository;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -60,11 +61,9 @@ public class FcgUserService {
 
     public UserDTOnoFJ getUserDTOWithNoFavoriteJourneys(String username) {
         // DONE 12: get the user (UserDTOnoFJ) given her username. If the user does not exist, throw a UserDoesNotExistsException
-        User user = getDomainUser(username);
-        if (user == null) throw new UserDoesNotExistsException("User dos not exist");
-        else{
-            return new UserDTOnoFJ(user.getUsername(), user.getName(), user.getSecondName(), user.getEmail());
-        }
+        UserDTOnoFJ userDTOnoFJ = userRepository.findUserDTOnoFJByUsername(username);
+        if (userDTOnoFJ == null) throw new UserDoesNotExistsException("User does not exist");
+        else return userDTOnoFJ;
     }
 
     public UserDTOInterface getUserDTOInterface(String username) {
@@ -72,7 +71,7 @@ public class FcgUserService {
         User user = getDomainUser(username);
         if (user == null) throw new UserDoesNotExistsException("User dos not exist");
         else{
-            return userRepository.findViewByUsername(username);
+            return userRepository.findUserDTOInterfaceByUsername(username);
         }
     }
 
@@ -88,14 +87,22 @@ public class FcgUserService {
     }
 
     // DONE 22: This method updates a user. Make sure the user is saved without explicitly calling the save method
+    @Transactional
     public void updateUser(UserDTOnoFJ userDTO) {
-        User user = getDomainUser(userDTO.username());
+        //Create entity manager and begin transaction
+        EntityManager entityManager = Persistence.createEntityManagerFactory("persistenceUnit1").createEntityManager();
+        entityManager.getTransaction().begin();
+
+        User user = entityManager.merge(getDomainUser(userDTO.username()));
+
+        //The following is from the teacher
         user.setName(userDTO.name());
         user.setSecondName(userDTO.secondName());
         user.setEmail(userDTO.email());
 
-        EntityManager entityManager = Persistence.createEntityManagerFactory("persistenceUnit1").createEntityManager();
-        entityManager.persist(user);
+        //Commit transaction, changes will be flushed
+        entityManager.getTransaction().commit();
+        entityManager.close(); //entity will become detached
     }
 
     public List<UserTopFavoriteJourney> getTop3UsersWithMostFavoriteJourneys() {
@@ -114,11 +121,9 @@ public class FcgUserService {
     }
 
     public List<FavoriteJourney> getFavoriteJourneys(String username) {
-        User user = getDomainUser(username);
-
         // DONE 11.1: get the user's favorite journeys given the User (domain object)
         List<FavoriteJourney> favoriteJourneys = new ArrayList<>();
-        favoriteJourneys = user.getFavoriteJourneyList();
+        favoriteJourneys = favoriteJourneyRepository.findFavoriteJourneyByUser(username);
         return favoriteJourneys;
     }
 
@@ -157,8 +162,10 @@ public class FcgUserService {
     }
 
     public List<PopularDayOfWeek> getPopularDayOfWeek() {
-        // DONE 18: get the most popular day of the week (PopularDayOfWeek) among the dayTimeStarts
+        // TODO 18: get the most popular day of the week (PopularDayOfWeek) among the dayTimeStarts
+        //What if two days are most popular?
 
-        return dayTimeStartRepository.getPopularDayOfWeek();
+        Pageable pageable = (Pageable) PageRequest.of(0, 1);
+        return dayTimeStartRepository.getPopularDayOfWeek(pageable);
     }
 }

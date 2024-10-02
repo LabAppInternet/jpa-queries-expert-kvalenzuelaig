@@ -18,14 +18,15 @@ public class FgcJouneyService {
     }
 
     public List<Journey> getAllJourneysDomain() {
-        //TODO 6: get all stations (see you return a domain Journey). Actually, you don't need to leave this file
+        //DONE 6: get all stations (see you return a domain Journey). Actually, you don't need to leave this file
         // in order to complete this exercise
-        return null;
+
+        return journeyRepository.findAll();
     }
 
     public List<JourneyDTO> getAllJourneysDTO() {
-        //TODO 7: get all journeys (see the returned type)
-        return null;
+        //DONE 7: get all journeys (see the returned type)
+        return journeyRepository.findAllJourneyDTO();
     }
 
     public Journey getJourneyDomain(String origin, String destination) {
