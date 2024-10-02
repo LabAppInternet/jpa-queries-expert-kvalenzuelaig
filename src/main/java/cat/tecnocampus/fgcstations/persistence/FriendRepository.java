@@ -7,7 +7,17 @@ import cat.tecnocampus.fgcstations.domain.FriendId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface FriendRepository extends JpaRepository<Friend, FriendId> {
+
+    List<Friend> findFriendByUsername(String username);
+
+    @Query("SELECT u FROM User u, Friend f WHERE f.user = u GROUP BY f.user ORDER BY count(f)")
+    List<UserTopFriend> getTopUsersWithMostFriends(Pageable pageable);
+
+    @Query("SELECT u FROM User u, Friend f WHERE f.user = u AND u.username = ?1")
+    List<FriendUserDTO> findUserWithFriendUsername(String friendName);
+
 }

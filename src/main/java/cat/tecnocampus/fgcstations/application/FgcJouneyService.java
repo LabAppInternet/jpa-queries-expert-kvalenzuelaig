@@ -30,14 +30,16 @@ public class FgcJouneyService {
     }
 
     public Journey getJourneyDomain(String origin, String destination) {
-        // TODO 8: get a journey by origin and destination (domain). If the journey does not exist, throw a JourneyDoesNotExistsException
+        // DONE 8: get a journey by origin and destination (domain). If the journey does not exist, throw a JourneyDoesNotExistsException
         //  try no to use any sql (jpql) query, just come up with an appropriate method name
-        return null;
+        Journey journey = journeyRepository.getJourneyByOriginAndDestination(origin, destination);
+        if (journey == null) throw new JourneyDoesNotExistsException(origin, destination);
+        else return journey;
     }
 
     public JourneyId getJourneyId(String origin, String destination) {
-        // TODO 9: get a journey ID by origin and destination (domain JourneyId). If the journey does not exist, throw a JourneyDoesNotExistsException
+        // DONE 9: get a journey ID by origin and destination (domain JourneyId). If the journey does not exist, throw a JourneyDoesNotExistsException
         //  try no to use any sql (jpql) query, just come up with an appropriate method name
-        return null;
+        return journeyRepository.getJourneyIdByOriginAndDestination(origin, destination);
     }
 }

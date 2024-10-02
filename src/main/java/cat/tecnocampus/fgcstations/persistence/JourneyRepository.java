@@ -17,4 +17,8 @@ public interface JourneyRepository extends JpaRepository<Journey, JourneyId> {
     @Query("SELECT j FROM Journey j")
     List<JourneyDTO> findAllJourneyDTO();
 
+    Journey getJourneyByOriginAndDestination(String origin, String destination);
+
+    JourneyId getJourneyIdByOriginAndDestination(String origin, String destination);
+
 }
