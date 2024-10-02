@@ -11,9 +11,7 @@ import cat.tecnocampus.fgcstations.persistence.DayTimeStartRepository;
 import cat.tecnocampus.fgcstations.persistence.FavoriteJourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.JourneyRepository;
 import cat.tecnocampus.fgcstations.persistence.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import jakarta.persistence.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -89,12 +87,15 @@ public class FcgUserService {
         return users.stream().map(MapperHelper::userToUserDTO).toList();
     }
 
-    // TODO 22: This method updates a user. Make sure the user is saved without explicitly calling the save method
+    // DONE 22: This method updates a user. Make sure the user is saved without explicitly calling the save method
     public void updateUser(UserDTOnoFJ userDTO) {
         User user = getDomainUser(userDTO.username());
         user.setName(userDTO.name());
         user.setSecondName(userDTO.secondName());
         user.setEmail(userDTO.email());
+
+        EntityManager entityManager = Persistence.createEntityManagerFactory("persistenceUnit1").createEntityManager();
+        entityManager.persist(user);
     }
 
     public List<UserTopFavoriteJourney> getTop3UsersWithMostFavoriteJourneys() {
