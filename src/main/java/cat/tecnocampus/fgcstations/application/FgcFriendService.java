@@ -56,7 +56,9 @@ public class FgcFriendService {
     // Find all users whose friends have a certain name
     public List<FriendUserDTO> getUsersByFriend(String friendName) {
         // DONE 23: find all users whose friends have a certain name.
-        return friendRepository.findUserWithFriendUsername(friendName);
+        List<FriendUserDTO> friends = new ArrayList<>();
+        friends = friendRepository.findAllByIdUsername(friendName);
+        return friends;
     }
 
 }

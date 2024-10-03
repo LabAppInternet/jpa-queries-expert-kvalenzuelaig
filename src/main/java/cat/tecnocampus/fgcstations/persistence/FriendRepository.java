@@ -1,6 +1,7 @@
 package cat.tecnocampus.fgcstations.persistence;
 
 import cat.tecnocampus.fgcstations.application.DTOs.FriendUserDTO;
+import cat.tecnocampus.fgcstations.application.DTOs.UserFriendsDTO;
 import cat.tecnocampus.fgcstations.application.DTOs.UserTopFriend;
 import cat.tecnocampus.fgcstations.domain.Friend;
 import cat.tecnocampus.fgcstations.domain.FriendId;
@@ -14,10 +15,9 @@ public interface FriendRepository extends JpaRepository<Friend, FriendId> {
 
     List<Friend> findFriendByUsername(String username);
 
-    @Query("SELECT u FROM User u, Friend f WHERE f.user = u GROUP BY f.user ORDER BY count(f)")
+    @Query("SELECT u FROM Friend f JOIN f.user u GROUP BY f.user ORDER BY count(f)")
     List<UserTopFriend> getTopUsersWithMostFriends(Pageable pageable);
 
-    @Query("SELECT u FROM User u, Friend f WHERE f.user = u AND u.username = ?1")
-    List<FriendUserDTO> findUserWithFriendUsername(String friendName);
+    List<FriendUserDTO> findAllByIdUsername(String username);
 
 }
