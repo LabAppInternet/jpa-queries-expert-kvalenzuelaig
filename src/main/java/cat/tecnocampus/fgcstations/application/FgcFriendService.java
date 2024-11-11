@@ -30,7 +30,7 @@ public class FgcFriendService {
 
         // DONE 20: find all the friends of a user given her username. You can solve this exercise without any sql query
         List<Friend> friends = new ArrayList<>(); //feed the list with the friends of the user
-        friends = friendRepository.findFriendByUsername(username);
+        friends = friendRepository.findFriendViewByUsername(username);
 
         return MapperHelper.listOfAUserFriendsToUserFriendsDTO(friends);
     }
@@ -48,9 +48,9 @@ public class FgcFriendService {
     }
 
     public List<UserTopFriend> getTop3UsersWithMostFriends() {
-        // DONE 22: find the top 3 users with the most friends.
+        // TODO 22: find the top 3 users with the most friends.
         Pageable pageable = (Pageable) PageRequest.of(0, 3);
-        return friendRepository.getTopUsersWithMostFriends(pageable);
+        return friendRepository.getTop3UsersWithMostFriends(pageable);
     }
 
     // Find all users whose friends have a certain name

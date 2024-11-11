@@ -13,11 +13,12 @@ import java.util.List;
 
 public interface FriendRepository extends JpaRepository<Friend, FriendId> {
 
-    List<Friend> findFriendByUsername(String username);
-
     @Query("SELECT u FROM Friend f JOIN f.user u GROUP BY f.user ORDER BY count(f)")
-    List<UserTopFriend> getTopUsersWithMostFriends(Pageable pageable);
+    List<UserTopFriend> getTop3UsersWithMostFriends(Pageable pageable);
 
     List<FriendUserDTO> findAllByIdUsername(String username);
+
+    @Query("SELECT f FROM Friend f JOIN f.user u WHERE u.username = ?1")
+    List<Friend> findFriendViewByUsername(String username);
 
 }
